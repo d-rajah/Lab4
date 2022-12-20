@@ -15,10 +15,13 @@ class Consumer:
             bootstrap_servers=[brokers]
         )
 
+    #Get data from producer
     def consumer_data(self, topic, partition):
         my_partition = TopicPartition(topic=topic, partition=partition)
         self.consumer.assign([my_partition])
-
+        
+        #Create and append output to text file
+        file1 = open("consumer.txt", "a")
         print(f"consumer start position: {self.consumer.position(my_partition)}")
 
         try:
@@ -32,7 +35,7 @@ class Consumer:
                     for message in record:
                         print(
                             f"{message.topic}:{message.partition}:{message.offset}: key={message.key} value={message.value}")
-
+		       file1.write({message.topic}:{message.partition}:{message.offset}: key={message.key} value={message.value})
                 try:
                     self.consumer.commit_async()
                     time.sleep(5)
@@ -49,7 +52,7 @@ class Consumer:
 
 def main(argv):
     # topic name
-    topic = "Hello"
+    topic = "Tweets"
     partition = 0
     my_consumer = Consumer(argv)
     my_consumer.consumer_data(topic, partition)
