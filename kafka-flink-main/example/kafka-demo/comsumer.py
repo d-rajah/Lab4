@@ -47,6 +47,7 @@ class Consumer:
             try:
                 self.consumer.commit()
             finally:
+		file1.close()
                 self.consumer.close()
 
 
